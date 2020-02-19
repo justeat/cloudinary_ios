@@ -60,7 +60,7 @@ internal class CLDNetworkDelegate: NSObject, CLDNetworkAdapter {
 
         let asyncUploadRequest = CLDAsyncNetworkUploadRequest()
         
-        let aa: (MultipartFormData) -> Void = { multipartFormData in
+        let multipart: (MultipartFormData) -> Void = { multipartFormData in
 
             if let data = data as? Data {
                 multipartFormData.append(data, withName: "file", fileName: "file", mimeType: "application/octet-stream")
@@ -100,9 +100,11 @@ internal class CLDNetworkDelegate: NSObject, CLDNetworkAdapter {
 
         }
         
-        asyncUploadRequest.networkDataRequest = CLDNetworkUploadRequest(request:
-            manager.upload(multipartFormData: aa, to: url, usingThreshold: UInt64(), method: .post, headers: HTTPHeaders(headers))
-        )
+        let uploadRequest = manager.upload(multipartFormData: multipart, to: url, usingThreshold: UInt64(), method: .post, headers: HTTPHeaders(headers))
+    
+        asyncUploadRequest.networkDataRequest = CLDNetworkUploadRequest(request: uploadRequest)
+        
+        uploadRequest.resume()
         
         return asyncUploadRequest
     }
