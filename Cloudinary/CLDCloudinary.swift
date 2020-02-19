@@ -183,19 +183,6 @@ public typealias CLDUploadCompletionHandler = (_ response: CLDUploadResult?, _ e
         networkCoordinator.setMaxConcurrentDownloads(maxConcurrentDownloads)
     }
 
-    // MARK: Background Session
-
-    /**
-        Set a completion handler provided by the UIApplicationDelegate `application:handleEventsForBackgroundURLSession:completionHandler:` method.
-        The handler will be called automatically once the session finishes its events for background URL session.
-    
-        default is `nil`.
-    */
-    @available(iOS 8.0, *)
-    open func setBackgroundCompletionHandler(_ newValue: (() -> ())?) {
-        networkCoordinator.setBackgroundCompletionHandler(newValue)
-    }
-
     // MARK: - Advanced
     /**
     Sets the "USER-AGENT" HTTP header on all network requests to be **"PlatformName/ver CloudinaryiOS/ver"**

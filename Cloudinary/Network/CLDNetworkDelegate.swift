@@ -27,26 +27,20 @@ import Alamofire
 
 
 internal class CLDNetworkDelegate: NSObject, CLDNetworkAdapter {
-
+   
     init(configuration: URLSessionConfiguration? = nil) {
         if let configuration = configuration {
-            manager = SessionManager(configuration: configuration)
+            manager = Session(configuration: configuration, startRequestsImmediately: false)
         } else {
-            let configuration: URLSessionConfiguration = {
-                let configuration = URLSessionConfiguration.background(withIdentifier: SessionProperties.identifier)
-                configuration.httpAdditionalHeaders = SessionManager.defaultHTTPHeaders
-                return configuration
-            }()
-            manager = SessionManager(configuration: configuration)
+            manager = Session(configuration: URLSessionConfiguration.af.default, startRequestsImmediately: false)
         }
-        manager.startRequestsImmediately = false
     }
 
     private struct SessionProperties {
         static let identifier: String = Bundle.main.bundleIdentifier ?? "" + ".cloudinarySDKbackgroundSession"
     }
 
-    fileprivate let manager: Alamofire.SessionManager
+    fileprivate var manager: Session
 
     fileprivate let downloadQueue: OperationQueue = OperationQueue()
 
@@ -55,7 +49,9 @@ internal class CLDNetworkDelegate: NSObject, CLDNetworkAdapter {
     // MARK: Features
 
     internal func cloudinaryRequest(_ url: String, headers: [String: String], parameters: [String: Any]) -> CLDNetworkDataRequest {
-        let req: DataRequest = manager.request(url, method: .post, parameters: parameters, headers: headers)
+        
+        let req: DataRequest = manager.request(url, method: .post, parameters: parameters, encoding: URLEncoding.default, headers: HTTPHeaders(headers))
+        
         req.resume()
         return CLDNetworkDataRequestImpl(request: req)
     }
@@ -63,7 +59,8 @@ internal class CLDNetworkDelegate: NSObject, CLDNetworkAdapter {
     internal func uploadToCloudinary(_ url: String, headers: [String: String], parameters: [String: Any], data: Any) -> CLDNetworkDataRequest {
 
         let asyncUploadRequest = CLDAsyncNetworkUploadRequest()
-        manager.upload(multipartFormData: { (multipartFormData) in
+        
+        let aa: (MultipartFormData) -> Void = { multipartFormData in
 
             if let data = data as? Data {
                 multipartFormData.append(data, withName: "file", fileName: "file", mimeType: "application/octet-stream")
@@ -101,17 +98,12 @@ internal class CLDNetworkDelegate: NSObject, CLDNetworkAdapter {
                 }
             }
 
-        }, usingThreshold: UInt64(), to: url, method: .post, headers: headers) { (encodingResult) in
-            switch encodingResult {
-            case .success(let upload, _, _):
-                upload.resume()
-                let uploadRequest = CLDNetworkUploadRequest(request: upload)
-                asyncUploadRequest.networkDataRequest = uploadRequest
-            case .failure(let encodingError):
-                asyncUploadRequest.networkDataRequest = CLDRequestError(error: encodingError)
-            }
         }
-
+        
+        asyncUploadRequest.networkDataRequest = CLDNetworkUploadRequest(request:
+            manager.upload(multipartFormData: aa, to: url, usingThreshold: UInt64(), method: .post, headers: HTTPHeaders(headers))
+        )
+        
         return asyncUploadRequest
     }
 
@@ -123,20 +115,7 @@ internal class CLDNetworkDelegate: NSObject, CLDNetworkAdapter {
         return CLDNetworkDownloadRequest(request: req)
     }
 
-    // MARK: - Setters
-
-    internal func setBackgroundCompletionHandler(_ newValue: (() -> ())?) {
-        manager.backgroundCompletionHandler = newValue
-    }
-
     internal func setMaxConcurrentDownloads(_ maxConcurrentDownloads: Int) {
         downloadQueue.maxConcurrentOperationCount = maxConcurrentDownloads
     }
-
-    // MARK: - Getters
-
-    internal func getBackgroundCompletionHandler() -> (() -> ())? {
-        return manager.backgroundCompletionHandler
-    }
-
 }

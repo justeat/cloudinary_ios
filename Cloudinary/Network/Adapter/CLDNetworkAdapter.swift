@@ -79,27 +79,11 @@ to use a custom network adapter you must implement the `CLDNetworkAdapter` proto
     // MARK: Setters
     
     /**
-    Set a completion handler provided by the UIApplicationDelegate `application:handleEventsForBackgroundURLSession:completionHandler:` method.
-    The handler will be called automaticaly once the session finishes its events for background URL session.
-    
-    default is `nil`.
-    */
-    func setBackgroundCompletionHandler(_ newValue: (() -> ())?)
-    
-    /**
      The maximum number of queued downloads that can execute at the same time.
      
      The default value of this property is NSOperationQueueDefaultMaxConcurrentOperationCount.
      */
     func setMaxConcurrentDownloads(_ maxConcurrentDownloads: Int)
-    
-    // MARK: Getters
-    /**
-    Get the completion handler to be called automaticaly once the session finishes its events for background URL session.
-    
-    default is `nil`.
-    */
-    func getBackgroundCompletionHandler() -> (() -> ())?
 }
 
 

@@ -165,12 +165,6 @@ internal class CLDNetworkCoordinator {
         }
     }
     
-    // MARK: - Public
-        
-    internal func setBackgroundCompletionHandler(_ newValue: (() -> ())?) {
-        networkAdapter.setBackgroundCompletionHandler(newValue)
-    }
-    
     internal func setMaxConcurrentDownloads(_ maxConcurrentDownloads: Int) {
         networkAdapter.setMaxConcurrentDownloads(maxConcurrentDownloads)
     }
