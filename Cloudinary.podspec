@@ -13,12 +13,12 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   s.author       = { "Cloudinary" => "info@cloudinary.com" }
   s.platform     = :ios
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
   s.swift_version = '5.0'
 
   s.source       = { :git => "https://github.com/cloudinary/cloudinary_ios.git", :tag => s.version.to_s }
 
-  s.dependency 'Alamofire', '~> 4.8.2'
+  s.dependency 'Alamofire', '~> 5.0.0'
 
   s.framework = "UIKit", "Foundation"
   s.source_files = "Cloudinary/**/*.swift"
