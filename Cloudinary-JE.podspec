@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
-  s.name         = "Cloudinary"
-  s.version      = "2.8.0"
+  s.name         = "Cloudinary-JE"
+  s.version      = "2.9.0"
   s.summary      = "Cloudinary is a cloud service that offers a solution to a web application's entire image management pipeline."
   s.description  = <<-DESC
     Easily upload images to the cloud. Automatically perform smart image resizing, cropping and conversion without installing any complex software.
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '10.0'
   s.swift_version = '5.0'
 
-  s.source       = { :git => "https://github.com/cloudinary/cloudinary_ios.git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/justeat/cloudinary_ios.git", :tag => s.version.to_s }
 
   s.dependency 'Alamofire', '~> 5.0.0'
 
