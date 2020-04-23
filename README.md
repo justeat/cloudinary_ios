@@ -1,3 +1,13 @@
+# This fork is now obsolete
+### See https://github.com/cloudinary/cloudinary_ios/releases/tag/2.9.0
+Use Cloudinary pod version 2.9.0 and up
+
+<br>
+<br>
+<br>
+<br>
+
+
 ![Cloudinary: Image And Video Management In The Cloud](https://res.cloudinary.com/cloudinary/image/asset/dpr_2.0/logo-e0df892053afd966cc0bfe047ba93ca4.png)
 ==================
 
